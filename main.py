@@ -7,7 +7,9 @@ from dspy.datasets.gsm8k import GSM8K, gsm8k_metric
 # turbo = dspy.OpenAI(model='gpt-3.5-turbo-instruct', max_tokens=250)
 # lm = dspy.HFModel(model = 'mistralai/Mistral-7B-Instruct-v0.2')
 # lm = dspy.HFClientVLLM(model="mistralai/Mistral-7B-Instruct-v0.2", port=8427, url="http://localhost")
-lm = dspy.HFClientVLLM(model="TheBloke/Xwin-LM-70B-V0.1-AWQ", port=8427, url="http://localhost")
+# lm = dspy.HFClientVLLM(model="TheBloke/Xwin-LM-70B-V0.1-AWQ", port=8427, url="http://localhost")
+lm = dspy.HFClientVLLM(model="TheBloke/openbuddy-mixtral-7bx8-v16.3-32k-AWQ", port=8427, url="http://localhost")
+# lm = dspy.HFClientVLLM(model="casperhansen/llama-3-8b-instruct-awq", port=8427, url="http://localhost")
 
 
 # lm = dspy.HFModel(model = 'mistralai/Mistral-7B-v0.1')
@@ -27,7 +29,7 @@ dspy.settings.configure(lm=lm, rm=colbertv2_wiki17_abstracts)
 from dspy.datasets import HotPotQA
 
 # Load the dataset.
-dataset = HotPotQA(train_seed=1, train_size=20, eval_seed=2023, dev_size=50, test_size=0)
+dataset = HotPotQA(train_seed=1, train_size=100, eval_seed=2023, dev_size=50, test_size=0)
 
 # Tell DSPy that the 'question' field is the input. Any other fields are labels and/or metadata.
 trainset = [x.with_inputs('question') for x in dataset.train]
@@ -109,7 +111,7 @@ compiled_baleen = teleprompter.compile(SimplifiedBaleen(), teacher=SimplifiedBal
 from dspy.evaluate.evaluate import Evaluate
 
 # Set up the `evaluate_on_hotpotqa` function. We'll use this many times below.
-evaluate_on_hotpotqa = Evaluate(devset=devset, num_threads=1, display_progress=True, display_table=5)
+evaluate_on_hotpotqa = Evaluate(devset=devset, num_threads=10, display_progress=True, display_table=5)
 
 
 def gold_passages_retrieved(example, pred, trace=None):
